@@ -29,4 +29,9 @@ raspistill -o cam.jpg
 Bild wird unter /home/pi gespeichert
 
 ### Eclipse and OpenCV
-Anleitung zur Installation von Eclipse und OpenCV: https://docs.opencv.org/3.1.0/d7/d16/tutorial_linux_eclipse.html
+Eclipse mit folgenden Befehlen installieren:
+```console
+sudo apt-get install eclipse
+sudo apt-get install eclipse-cdt g++
+```
+Anleitung zur Konfiguration von Eclipse und OpenCV: https://docs.opencv.org/3.1.0/d7/d16/tutorial_linux_eclipse.html
