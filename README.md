@@ -20,6 +20,13 @@ Kamera aktivieren:
 sudo raspi-config
 ```
 Die Kamera Option muss über die Pfeiltasten und Cursor auf "Enable" gesetzt werden.
+Danach wird ein Reboot gefordert.
+
+Prüfen ob die Kamera funktioniert:
+```console
+raspistill -o cam.jpg
+```
+Bild wird unter /home/pi gespeichert
 
 ### Eclipse and OpenCV
 Anleitung zur Installation von Eclipse und OpenCV: https://docs.opencv.org/3.1.0/d7/d16/tutorial_linux_eclipse.html
