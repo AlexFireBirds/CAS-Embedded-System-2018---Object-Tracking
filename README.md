@@ -2,8 +2,7 @@
 Im Modul Embedded Systems soll eine Projektarbeit durchgeführt werden, um das gelernte Wissen direkt anzuwenden.
 
 ## Descrption:
-Es soll mit einem Raspberry Pi und der Pi Kamera ein Tischtennisball erkannt werden. Dieser wird mittels zwei Servos(Pan,Tilt) getrackt.
-Befindet sich der Ball in einem definierten Bildausschnitt, soll dieser mit einem Luftstoss oder ähnlichem abgelenkt werden.
+Es soll mit einem Raspberry Pi und der Pi Kamera ein Tischtennisball erkannt werden. Dieser wird mittels zwei Servos(Pan,Tilt) getrackt. Befindet sich der Ball in einem definierten Bildausschnitt, soll dieser mit einem Luftstoss oder ähnlichem abgelenkt werden.
 
 ##Setup:
 
