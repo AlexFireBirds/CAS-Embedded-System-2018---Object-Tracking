@@ -35,3 +35,8 @@ sudo apt-get install eclipse
 sudo apt-get install eclipse-cdt g++
 ```
 Anleitung zur Konfiguration von Eclipse und OpenCV: https://docs.opencv.org/3.1.0/d7/d16/tutorial_linux_eclipse.html
+
+### Git GUI Client
+```console
+sudo apt-get install git-cola
+```
