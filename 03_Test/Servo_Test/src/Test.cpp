@@ -13,17 +13,28 @@
 using namespace cv;
 int main( int argc, char** argv )
 {
-  Mat image;
-  image = imread( argv[1], 1 );
-  if( argc != 2 || !image.data )
-    {
-      printf( "No image data \n" );
-      return -1;
-    }
-  namedWindow( "Display Image", WINDOW_AUTOSIZE );
-  imshow( "Display Image", image );
-  waitKey(0);
-  return 0;
+
+	PWM myPWM0(0, 100, 50);
+
+	PWM myPWM1(1, 1000, 20);
+
+	myPWM0.enable();
+
+	myPWM1.enable();
+
+	waitKey(5000);
+
+	myPWM1.setDutyCycle(80);
+
+	waitKey(5000);
+
+	myPWM1.setFrequency(20);
+
+	waitKey(5000);
+
+	myPWM1.disable();
+
+	return 0;
 }
 
 
