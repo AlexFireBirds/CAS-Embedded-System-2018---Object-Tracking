@@ -47,7 +47,9 @@ Alternativ kann es via Terminal manuell hinzugefügt werden (muss beim nächsten R
 ```console
 sudo modprobe bcm2835-v4l2
 ```
-
+### PWM Output setup
+Unter **/boot/config.txt** die Zeile **dtoverlay=pwm-2chan** einfügen. Danach speichern und neustarten.
+Nun muss der Pfad **/sys/class/pwm/pwmchip0** existieren. pwm0 ist auf dem GPIO18 und pwm1 auf dem GPIO19.
 
 ### Git GUI Client
 ```console
