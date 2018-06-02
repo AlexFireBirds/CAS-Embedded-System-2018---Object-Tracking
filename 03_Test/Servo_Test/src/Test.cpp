@@ -9,30 +9,24 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include "PWM.hpp"
+#include "Servo.hpp"
+#include <unistd.h>
 
 using namespace cv;
 int main( int argc, char** argv )
 {
 
-	PWM myPWM0(0, 50, 7);
+	Servo panServo(Servo::PAN);
+	panServo.enable();
+	Servo tiltServo(Servo::TILT);
+	tiltServo.enable();
 
-	PWM myPWM1(1, 1000, 20);
+	for(int i = 0; i <= 90; i++){
 
-	myPWM0.enable();
-
-	myPWM1.enable();
-
-	waitKey(5000);
-
-	myPWM1.setDutyCycle(80);
-
-	waitKey(5000);
-
-	myPWM1.setFrequency(20);
-
-	waitKey(5000);
-
-	myPWM1.disable();
+		panServo.setAngle(-i);
+		tiltServo.setAngle(i);
+		usleep(100000);
+	}
 
 	return 0;
 }
