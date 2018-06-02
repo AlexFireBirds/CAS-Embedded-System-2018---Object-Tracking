@@ -11,6 +11,8 @@
 #include <opencv2/videoio.hpp>
 #include <opencv2/imgproc.hpp>
 #include "ThresholdEvaluator.hpp"
+#include "BallDetection.hpp"
+
 
 using namespace cv;
 
@@ -18,6 +20,8 @@ using namespace cv;
 int main( int argc, char** argv )
 {
   ThresholdEvaluator thresholdEvalutaion;
+  BallDetection ballDetector;
+
 
   // Raspberry Pi Camera Test
   VideoCapture cap(0);
@@ -46,7 +50,29 @@ int main( int argc, char** argv )
 	     break;
 	    }
   }
-  //thresholdEvalutaion.~ThresholdEvaluator();
+  thresholdEvalutaion.~ThresholdEvaluator();
+
+  while(1)
+  {
+		// Get actual image
+		cap >> originalImage;
+
+		ballDetector.ExecuteDetecionCycle(originalImage);
+
+
+        circle( originalImage, Point(ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y), 15, Scalar(0,0,255), 3, LINE_AA);
+        circle( originalImage, Point(ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y), 2, Scalar(0,255,0), 3, LINE_AA);
+        imshow("Processd image", originalImage);
+
+        printf("x: %d \r\ny: %d\r\n\r\n", ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y);
+
+	    // Check exit condition for endless loop
+	    if (cv::waitKey(5)>=0)
+	    {
+	     break;
+	    }
+  }
+
 
   while(1)
   {
