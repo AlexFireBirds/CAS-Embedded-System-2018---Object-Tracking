@@ -1,6 +1,12 @@
 /*
  * ThresholdEvaluator.hpp
  *
+ * Use id like:
+ * 		thresholdEvalutaion.ProcessImage(originalImage);
+		thresholdEvalutaion.ShowProcessdImage();
+ *
+ *
+ *
  *  Created on: 2 Jun 2018
  *      Author: pi
  */
@@ -23,7 +29,6 @@ public:
     ~ThresholdEvaluator(); 			// Destructor
     void ProcessImage(cv::Mat image);
     void ShowProcessdImage(void);
-    void ShowImage(cv::Mat image);
     // Getter for HSV threshold values
     int GetLow_H(void);
     int GetLow_S(void);

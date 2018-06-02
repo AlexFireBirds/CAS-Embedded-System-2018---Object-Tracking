@@ -80,12 +80,6 @@ void ThresholdEvaluator::ShowProcessdImage(void)
     imshow(_windowName, processdImage);
 }
 
-void ThresholdEvaluator::ShowImage(cv::Mat image)
-{
-	imshow(_windowName, image);
-}
-
-
 // Getter for HSV threshold values
 int ThresholdEvaluator::GetLow_H(void)
 {
