@@ -24,9 +24,15 @@ public:
     void ProcessImage(cv::Mat image);
     void ShowProcessdImage(void);
     void ShowImage(cv::Mat image);
+    // Getter for HSV threshold values
+    int GetLow_H(void);
+    int GetLow_S(void);
+    int GetLow_V(void);
+    int GetHigh_H(void);
+    int GetHigh_S(void);
+    int GetHigh_V(void);
 
 private:
-
 };
 
 

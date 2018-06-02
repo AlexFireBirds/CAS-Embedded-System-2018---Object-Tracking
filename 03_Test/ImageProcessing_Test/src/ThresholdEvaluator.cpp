@@ -11,15 +11,16 @@ using namespace cv;
 
 const int max_value_H = 360/2;
 const int max_value = 255;
-const String _windowName = "Object Detection";
+const cv::String _windowName = "Object Detection";
 int low_H = 0, low_S = 0, low_V = 0;
 int high_H = max_value_H, high_S = max_value, high_V = max_value;
-Mat processdImage;
 
+cv::Mat processdImage;
 
+// Callbacks for trackbars
 static void on_low_H_thresh_trackbar(int, void *)
 {
-    low_H = min(high_H-1, low_H);
+	low_H = min(high_H-1, low_H);
     setTrackbarPos("Low H", _windowName, low_H);
 }
 static void on_high_H_thresh_trackbar(int, void *)
@@ -63,7 +64,7 @@ ThresholdEvaluator::ThresholdEvaluator(){
 }
 
 ThresholdEvaluator::~ThresholdEvaluator(){
-	destroyWindow(_windowName);
+	destroyAllWindows();
 }
 
 void ThresholdEvaluator::ProcessImage(Mat image)
@@ -83,6 +84,39 @@ void ThresholdEvaluator::ShowImage(cv::Mat image)
 {
 	imshow(_windowName, image);
 }
+
+
+// Getter for HSV threshold values
+int ThresholdEvaluator::GetLow_H(void)
+{
+	return low_H;
+}
+
+int ThresholdEvaluator::GetLow_S(void)
+{
+	return low_S;
+}
+
+int ThresholdEvaluator::GetLow_V(void)
+{
+	return low_V;
+}
+
+int ThresholdEvaluator::GetHigh_H(void)
+{
+	return high_H;
+}
+
+int ThresholdEvaluator::GetHigh_S(void)
+{
+	return high_S;
+}
+
+int ThresholdEvaluator::GetHigh_V(void)
+{
+	return high_V;
+}
+
 
 
 
