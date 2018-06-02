@@ -59,10 +59,8 @@ int main( int argc, char** argv )
 
     // Apply thresholds
     //inRange(hsvimage, Scalar(0, 0, 0), Scalar(139, 196, 243), hsvimage);
-    //inRange(hsvimage, Scalar(0, 140, 128), Scalar(73, 255, 250), hsvimage);
-    inRange(hsvimage, Scalar(thresholdEvalutaion.GetLow_H(), thresholdEvalutaion.GetLow_S(), thresholdEvalutaion.GetLow_V()), Scalar(thresholdEvalutaion.GetHigh_H(), thresholdEvalutaion.GetHigh_S(), thresholdEvalutaion.GetHigh_V()), hsvimage);
-
-
+    inRange(hsvimage, Scalar(0, 140, 128), Scalar(73, 255, 250), hsvimage);
+    //inRange(hsvimage, Scalar(thresholdEvalutaion.GetLow_H(), thresholdEvalutaion.GetLow_S(), thresholdEvalutaion.GetLow_V()), Scalar(thresholdEvalutaion.GetHigh_H(), thresholdEvalutaion.GetHigh_S(), thresholdEvalutaion.GetHigh_V()), hsvimage);
     imshow("hsvimage",hsvimage);
 
     // Smooth image
@@ -70,7 +68,7 @@ int main( int argc, char** argv )
 
     // Search for circles
     std::vector<Vec3f> circles;
-    HoughCircles(hsvimage, circles, HOUGH_GRADIENT, 1, hsvimage.rows/8, 100, 30, 25, 100);
+    HoughCircles(hsvimage, circles, HOUGH_GRADIENT, 1, 50, 100, 30, 25, 100);
 
     // Highlight detected circles
     Mat cimg = originalImage;
