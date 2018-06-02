@@ -14,7 +14,7 @@ using namespace cv;
 int main( int argc, char** argv )
 {
 
-	PWM myPWM0(0, 100, 50);
+	PWM myPWM0(0, 50, 7);
 
 	PWM myPWM1(1, 1000, 20);
 

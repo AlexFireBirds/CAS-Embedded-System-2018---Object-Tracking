@@ -5,11 +5,6 @@
  *      Author: pi
  */
 
-#include <fstream>
-#include "string"
-#include <iostream>
-#include <sstream>
-
 #include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>

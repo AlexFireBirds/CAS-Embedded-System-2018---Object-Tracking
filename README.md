@@ -50,10 +50,17 @@ sudo modprobe bcm2835-v4l2
 ### PWM Output setup
 Unter **/boot/config.txt** die Zeile **dtoverlay=pwm-2chan** einfügen. Danach speichern und neustarten.
 Nun muss der Pfad **/sys/class/pwm/pwmchip0** existieren. pwm0 ist auf dem GPIO18 und pwm1 auf dem GPIO19.
-Zurzeit müssen bei jedem Start die Rechte gesetzt werden.
+Rechte setzen, damit auf die PWM HW zugegriffen werden kann. Unter **/etc/udev/rules.d/99-com.rules** folgende Zeilen hinzufügen:
 ```console
-sudo chmod -R 777 /sys/class/pwm/pwmchip0
+SUBSYSTEM=="pwm*", PROGRAM="/bin/sh -c '\
+        chown -R root:gpio /sys/class/pwm && chmod -R 770 /sys/class/pwm;\
+        chown -R root:gpio /sys/devices/platform/soc/*.pwm/pwm/pwmchip* && chmod -R 770 /sys/devices/platform/soc/*.pwm/pwm/pwmchip*\
+'"
 ``` 
+Danach in Eclipse unter ***Properties->C/C++ Build->Settings->Build Steps->Post-build steps* die folgende Zeile einfügen:
+```console
+sudo chown root <Projektname>; sudo chmod +s <Projektname>;
+```
 
 ### Git GUI Client
 ```console
