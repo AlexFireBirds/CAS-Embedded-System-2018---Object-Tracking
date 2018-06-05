@@ -12,6 +12,8 @@
 #include <opencv2/imgproc.hpp>
 #include "ThresholdEvaluator.hpp"
 #include "BallDetection.hpp"
+#include "Servo.hpp"
+#include <unistd.h>
 
 
 using namespace cv;
@@ -21,6 +23,11 @@ int main( int argc, char** argv )
 {
   ThresholdEvaluator thresholdEvalutaion;
   BallDetection ballDetector;
+
+	Servo panServo(Servo::PAN);
+	panServo.enable();
+	Servo tiltServo(Servo::TILT);
+	tiltServo.enable();
 
 
   // Raspberry Pi Camera Test
@@ -33,12 +40,10 @@ int main( int argc, char** argv )
   Mat originalImage;
   Mat hsvimage;
 
-  printf("Start grabbing, press a key on Live window to terminate\n\r");
-
   // Evaluate Thresholds
   while(1)
   {
-		// Get actual image
+		// Get actual image (640 x 480)
 		cap >> originalImage;
 
 		thresholdEvalutaion.ProcessImage(originalImage);
@@ -64,7 +69,11 @@ int main( int argc, char** argv )
         circle( originalImage, Point(ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y), 2, Scalar(0,255,0), 3, LINE_AA);
         imshow("Processd image", originalImage);
 
-        printf("x: %d \r\ny: %d\r\n\r\n", ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y);
+//        panServo.setAngle((ballDetector.GetCoordinatesOfBall().x) * 0.28125f - 90);
+//		  tiltServo.setAngle((ballDetector.GetCoordinatesOfBall().y) * 0.375f - 90);
+
+//		  printf("X: %d\r\nY: %d\r\n\r\n", ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y);
+
 
 	    // Check exit condition for endless loop
 	    if (cv::waitKey(5)>=0)
@@ -84,7 +93,6 @@ int main( int argc, char** argv )
     //imshow("hsvimage",hsvimage);
 
     // Apply thresholds
-    //inRange(hsvimage, Scalar(0, 0, 0), Scalar(139, 196, 243), hsvimage);
     inRange(hsvimage, Scalar(0, 140, 128), Scalar(73, 255, 250), hsvimage);
     //inRange(hsvimage, Scalar(thresholdEvalutaion.GetLow_H(), thresholdEvalutaion.GetLow_S(), thresholdEvalutaion.GetLow_V()), Scalar(thresholdEvalutaion.GetHigh_H(), thresholdEvalutaion.GetHigh_S(), thresholdEvalutaion.GetHigh_V()), hsvimage);
     imshow("hsvimage",hsvimage);
