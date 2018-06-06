@@ -21,12 +21,17 @@ int main( int argc, char** argv )
 	Servo tiltServo(Servo::TILT);
 	tiltServo.enable();
 
-	for(int i = 0; i <= 90; i++){
+	panServo.setAngle(90);//Pan -90 to 90
+	tiltServo.setAngle(45);//Tilt -90 to 45
 
-		panServo.setAngle(-i);
-		tiltServo.setAngle(i);
-		usleep(100000);
-	}
+
+
+//	for(int i = 0; i <= 90; i++){
+//
+//		panServo.setAngle(-i);
+//		tiltServo.setAngle(i);
+//		usleep(100000);
+//	}
 
 	return 0;
 }

@@ -27,7 +27,7 @@ unsigned int Servo::setAngle(double deg){
 	if(deg <= MAXANGLE && deg >= MINANGLE){
 
 		/*Map deg to duty cycle*/
-		if(this->myPWM.setDutyCycle(((1.0/36.0) * deg + 7.5)) < 0){
+		if(this->myPWM.setDutyCycle((0.05 * deg + 7.5)) < 0){
 
 			perror("setting Servo angle");
 			return -1;
