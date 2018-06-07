@@ -12,18 +12,12 @@
 #include <opencv2/imgproc.hpp>
 #include "ThresholdEvaluator.hpp"
 #include "BallDetection.hpp"
+#include "BallTracker.hpp"
 #include "Servo.hpp"
 #include <unistd.h>
 
 
 using namespace cv;
-
-
-typedef struct
-{
-	int x;
-	int y;
-} Coordinate;
 
 int main( int argc, char** argv )
 {
@@ -61,34 +55,11 @@ int main( int argc, char** argv )
 	     break;
 	    }
   }
-  thresholdEvalutaion.~ThresholdEvaluator();
+  //thresholdEvalutaion.~ThresholdEvaluator();
 
 
   // Business logic test
-  int imageWidth = originalImage.size().width;
-  int imageHeight = originalImage.size().height;
-
-  unsigned int targetWindowWidth = 200;
-  unsigned int targetWindowHeight = 135;
-
-  Coordinate centerOfImage;
-  centerOfImage.x = imageWidth/2;
-  centerOfImage.y = imageHeight/2;
-
-  // Draw target window
-  Point upperLeftCornerOfTargetWindow;
-  Point lowerRightCornerOfTargetWindow;
-
-  upperLeftCornerOfTargetWindow.x = centerOfImage.x - targetWindowWidth / 2;
-  upperLeftCornerOfTargetWindow.y = centerOfImage.y - targetWindowHeight / 2;
-
-  lowerRightCornerOfTargetWindow.x = centerOfImage.x + targetWindowWidth / 2;
-  lowerRightCornerOfTargetWindow.y = centerOfImage.y + targetWindowHeight / 2;
-
-
-  rectangle(originalImage, upperLeftCornerOfTargetWindow, lowerRightCornerOfTargetWindow, Scalar(0, 140, 255),4, -1, 0);
-
-
+  BallTracker balltracking(originalImage);
 
 	// Init tour for servos
 	// to default position;
@@ -115,18 +86,17 @@ int main( int argc, char** argv )
 	// Get actual image
 	cap >> originalImage;
 
-	rectangle(originalImage, upperLeftCornerOfTargetWindow, lowerRightCornerOfTargetWindow, Scalar(0, 140, 255),4, -1, 0);
+	balltracking.DrawTargetWindow(originalImage);
 
     imshow("Processd image", originalImage);
 
-
     // Do a process cycle and get coordinates of the ball in this frame
     // Evaluate pan correction
-    if (ballDetector.GetCoordinatesOfBall().x < upperLeftCornerOfTargetWindow.x)
+    if (ballDetector.GetCoordinatesOfBall().x < balltracking.GetupperLeftCornerOfTargetWindow().x)
     {
     	panAxisCorrection = -2;
     }
-    else if (ballDetector.GetCoordinatesOfBall().x > lowerRightCornerOfTargetWindow.x)
+    else if (ballDetector.GetCoordinatesOfBall().x > balltracking.GetLowerRightCornerOfTargetWindow().x)
 	{
     	panAxisCorrection = 2;
 	}
@@ -136,11 +106,11 @@ int main( int argc, char** argv )
     }
 
     // Evaluate tilt correction
-    if (ballDetector.GetCoordinatesOfBall().y > upperLeftCornerOfTargetWindow.y)
+    if (ballDetector.GetCoordinatesOfBall().y > balltracking.GetupperLeftCornerOfTargetWindow().y)
     {
     	tiltAxisCorrection = 2;
     }
-    else if (ballDetector.GetCoordinatesOfBall().y < lowerRightCornerOfTargetWindow.y)
+    else if (ballDetector.GetCoordinatesOfBall().y < balltracking.GetLowerRightCornerOfTargetWindow().y)
 	{
     	tiltAxisCorrection = 2;
 	}
@@ -148,7 +118,6 @@ int main( int argc, char** argv )
     {
     	tiltAxisCorrection = 0;
     }
-
 
     // Check movement range of pan axis
     //panAxisCorrection = panServo.getAngle() + panAxisCorrection;
@@ -160,8 +129,6 @@ int main( int argc, char** argv )
     {
     	panAxisCorrection = -90;
     }
-
-
 
     // Check movement range of tilt axis
     //tiltAxisCorrection = tiltServo.getAngle() + tiltAxisCorrection;
@@ -221,8 +188,7 @@ int main( int argc, char** argv )
     //imshow("hsvimage",hsvimage);
 
     // Apply thresholds
-    inRange(hsvimage, Scalar(0, 140, 128), Scalar(73, 255, 250), hsvimage);
-    //inRange(hsvimage, Scalar(thresholdEvalutaion.GetLow_H(), thresholdEvalutaion.GetLow_S(), thresholdEvalutaion.GetLow_V()), Scalar(thresholdEvalutaion.GetHigh_H(), thresholdEvalutaion.GetHigh_S(), thresholdEvalutaion.GetHigh_V()), hsvimage);
+    inRange(hsvimage, Scalar(thresholdEvalutaion.GetLow_H(), thresholdEvalutaion.GetLow_S(), thresholdEvalutaion.GetLow_V()), Scalar(thresholdEvalutaion.GetHigh_H(), thresholdEvalutaion.GetHigh_S(), thresholdEvalutaion.GetHigh_V()), hsvimage);
     imshow("hsvimage",hsvimage);
 
     // Smooth image
