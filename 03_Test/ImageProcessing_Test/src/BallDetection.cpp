@@ -10,7 +10,13 @@
 using namespace cv;
 
 BallDetection::BallDetection()
-:numberOfDetectedBalls(0), isDetectionRunning(false)
+:numberOfDetectedBalls(0), isDetectionRunning(false),
+ low_H(0),
+ low_S(140),
+ low_V(128),
+ high_H(73),
+ high_S(255),
+ high_V(250)
 {
 
 }
@@ -29,7 +35,7 @@ void BallDetection::ExecuteDetecionCycle(cv::Mat image)
 	cvtColor(image, processdImage, COLOR_BGR2HSV,0);
 
 	// Apply threshold
-	inRange(processdImage, Scalar(0, 140, 128), Scalar(73, 255, 250), processdImage);
+	inRange(processdImage, Scalar(low_H, low_S, low_V), Scalar(high_H, high_S, high_V), processdImage);
 
 	// Smooth image
 	GaussianBlur(processdImage, processdImage, Size(9,9), 0, 0);
@@ -63,6 +69,32 @@ bool BallDetection::IsDetectionRunning(void)
 	return isDetectionRunning;
 }
 
+void BallDetection::SetLow_H(int value)
+{
+	low_H = value;
+}
 
+void BallDetection::SetLow_S(int value)
+{
+	low_S = value;
+}
 
+void BallDetection::SetLow_V(int value)
+{
+	low_V = value;
+}
 
+void BallDetection::SetHigh_H(int value)
+{
+	high_H = value;
+}
+
+void BallDetection::SetHigh_S(int value)
+{
+	high_S = value;
+}
+
+void BallDetection::SetHigh_V(int value)
+{
+	high_V = value;
+}

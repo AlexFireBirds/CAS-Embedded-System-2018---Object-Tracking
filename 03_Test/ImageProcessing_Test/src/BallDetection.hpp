@@ -18,8 +18,8 @@ using namespace std;
 
 typedef struct
 {
-	unsigned int x;
-	unsigned int y;
+	int x;
+	int y;
 } BallCoordinates;
 
 
@@ -34,10 +34,23 @@ public:
     void ExecuteDetecionCycle(cv::Mat image);
     BallCoordinates GetCoordinatesOfBall(void);
 
+    void SetLow_H(int value);
+    void SetLow_S(int value);
+    void SetLow_V(int value);
+    void SetHigh_H(int value);
+    void SetHigh_S(int value);
+    void SetHigh_V(int value);
+
 private:
     unsigned int numberOfDetectedBalls;
     bool isDetectionRunning;
     BallCoordinates coordinatesOfBall;
+    int low_H;
+    int low_S;
+    int low_V;
+    int high_H;
+    int high_S;
+    int high_V;
 };
 
 
