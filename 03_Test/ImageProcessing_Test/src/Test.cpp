@@ -19,6 +19,12 @@
 using namespace cv;
 
 
+typedef struct
+{
+	int x;
+	int y;
+} Coordinate;
+
 int main( int argc, char** argv )
 {
   ThresholdEvaluator thresholdEvalutaion;
@@ -57,13 +63,136 @@ int main( int argc, char** argv )
   }
   thresholdEvalutaion.~ThresholdEvaluator();
 
+
+  // Business logic test
+  int imageWidth = originalImage.size().width;
+  int imageHeight = originalImage.size().height;
+
+  unsigned int targetWindowWidth = 200;
+  unsigned int targetWindowHeight = 135;
+
+  Coordinate centerOfImage;
+  centerOfImage.x = imageWidth/2;
+  centerOfImage.y = imageHeight/2;
+
+  // Draw target window
+  Point upperLeftCornerOfTargetWindow;
+  Point lowerRightCornerOfTargetWindow;
+
+  upperLeftCornerOfTargetWindow.x = centerOfImage.x - targetWindowWidth / 2;
+  upperLeftCornerOfTargetWindow.y = centerOfImage.y - targetWindowHeight / 2;
+
+  lowerRightCornerOfTargetWindow.x = centerOfImage.x + targetWindowWidth / 2;
+  lowerRightCornerOfTargetWindow.y = centerOfImage.y + targetWindowHeight / 2;
+
+
+  rectangle(originalImage, upperLeftCornerOfTargetWindow, lowerRightCornerOfTargetWindow, Scalar(0, 140, 255),4, -1, 0);
+
+
+
+	// Init tour for servos
+	// to default position;
+/*	panServo.setAngle(-90);
+	tiltServo.setAngle(-90);
+	usleep(2000000);
+	tiltServo.setAngle(90);
+	usleep(2000000);
+	panServo.setAngle(90);
+	usleep(2000000);
+	tiltServo.setAngle(-90);
+	usleep(2000000);
+	panServo.setAngle(45);
+	usleep(1000000);
+	tiltServo.setAngle(45);
+*/
+
+
+  double panAxisCorrection;
+  double tiltAxisCorrection;
+
+  while(1)
+  {
+	// Get actual image
+	cap >> originalImage;
+
+	rectangle(originalImage, upperLeftCornerOfTargetWindow, lowerRightCornerOfTargetWindow, Scalar(0, 140, 255),4, -1, 0);
+
+    imshow("Processd image", originalImage);
+
+
+    // Do a process cycle and get coordinates of the ball in this frame
+    // Evaluate pan correction
+    if (ballDetector.GetCoordinatesOfBall().x < upperLeftCornerOfTargetWindow.x)
+    {
+    	panAxisCorrection = -2;
+    }
+    else if (ballDetector.GetCoordinatesOfBall().x > lowerRightCornerOfTargetWindow.x)
+	{
+    	panAxisCorrection = 2;
+	}
+    else
+    {
+    	panAxisCorrection = 0;
+    }
+
+    // Evaluate tilt correction
+    if (ballDetector.GetCoordinatesOfBall().y > upperLeftCornerOfTargetWindow.y)
+    {
+    	tiltAxisCorrection = 2;
+    }
+    else if (ballDetector.GetCoordinatesOfBall().y < lowerRightCornerOfTargetWindow.y)
+	{
+    	tiltAxisCorrection = 2;
+	}
+    else
+    {
+    	tiltAxisCorrection = 0;
+    }
+
+
+    // Check movement range of pan axis
+    //panAxisCorrection = panServo.getAngle() + panAxisCorrection;
+    if(panAxisCorrection > 90)
+    {
+    	panAxisCorrection = 90;
+    }
+    if(panAxisCorrection < -90)
+    {
+    	panAxisCorrection = -90;
+    }
+
+
+
+    // Check movement range of tilt axis
+    //tiltAxisCorrection = tiltServo.getAngle() + tiltAxisCorrection;
+    if(tiltAxisCorrection > 90)
+    {
+    	tiltAxisCorrection = 90;
+    }
+    if(tiltAxisCorrection < -90)
+    {
+    	tiltAxisCorrection = -90;
+    }
+
+    // Execute correction
+    panServo.setAngle(panAxisCorrection);
+    tiltServo.setAngle(tiltAxisCorrection);
+
+	// Check exit condition for endless loop
+	if (cv::waitKey(5)>=0)
+	{
+	 break;
+	}
+
+  }
+
+
   while(1)
   {
 		// Get actual image
 		cap >> originalImage;
 
 		ballDetector.ExecuteDetecionCycle(originalImage);
-
 
         circle( originalImage, Point(ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y), 15, Scalar(0,0,255), 3, LINE_AA);
         circle( originalImage, Point(ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y), 2, Scalar(0,255,0), 3, LINE_AA);
@@ -73,7 +202,6 @@ int main( int argc, char** argv )
 //		  tiltServo.setAngle((ballDetector.GetCoordinatesOfBall().y) * 0.375f - 90);
 
 //		  printf("X: %d\r\nY: %d\r\n\r\n", ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y);
-
 
 	    // Check exit condition for endless loop
 	    if (cv::waitKey(5)>=0)
