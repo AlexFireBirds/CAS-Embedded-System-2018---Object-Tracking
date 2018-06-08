@@ -30,8 +30,8 @@ public:
     ~BallTracker(); 			// Destructor
 
     void DrawTargetWindow(cv::Mat image);
-    void SetTargetWindowSIze(unsigned int width, unsigned height);
-    cv::Point GetupperLeftCornerOfTargetWindow(void);
+    void SetTargetWindowSize(unsigned int width, unsigned height);
+    cv::Point GetUpperLeftCornerOfTargetWindow(void);
     cv::Point GetLowerRightCornerOfTargetWindow(void);
 
 

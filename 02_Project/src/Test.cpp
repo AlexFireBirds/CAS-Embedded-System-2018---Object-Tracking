@@ -40,8 +40,10 @@ int main( int argc, char** argv )
 	// Get actual image (640 x 480)
 	cap >> originalImage;
 
+
 	// Business logic test
 	BallTracker balltracking(originalImage);
+	balltracking.SetTargetWindowSize(200, 135);
 
 	ballDetector.SetLow_H(0);
 	ballDetector.SetLow_S(0);
@@ -55,6 +57,8 @@ int main( int argc, char** argv )
 	// Init servos
 	panServo.setAngle(0);
 	tiltServo.setAngle(-20);
+
+
 
   while(1)
   {
@@ -73,32 +77,28 @@ int main( int argc, char** argv )
 
     // Do a process cycle and get coordinates of the ball in this frame
     // Evaluate pan correction
-    if (ballDetector.GetCoordinatesOfBall().x < balltracking.GetupperLeftCornerOfTargetWindow().x)
+    panAxisCorrection = 0;
+    if (ballDetector.GetCoordinatesOfBall().x < balltracking.GetUpperLeftCornerOfTargetWindow().x)
     {
     	panAxisCorrection = 2;
     }
-    else if (ballDetector.GetCoordinatesOfBall().x > balltracking.GetLowerRightCornerOfTargetWindow().x)
+    if (ballDetector.GetCoordinatesOfBall().x > balltracking.GetLowerRightCornerOfTargetWindow().x)
 	{
     	panAxisCorrection = -2;
 	}
-    else
-    {
-    	panAxisCorrection = 0;
-    }
+
 
     // Evaluate tilt correction
-    if (ballDetector.GetCoordinatesOfBall().y > balltracking.GetupperLeftCornerOfTargetWindow().y)
+    tiltAxisCorrection = 0;
+    if (ballDetector.GetCoordinatesOfBall().y > balltracking.GetLowerRightCornerOfTargetWindow().y)
     {
-    	tiltAxisCorrection = -2;
+    	tiltAxisCorrection = 1;
     }
-    else if (ballDetector.GetCoordinatesOfBall().y < balltracking.GetLowerRightCornerOfTargetWindow().y)
+    if (ballDetector.GetCoordinatesOfBall().y < balltracking.GetUpperLeftCornerOfTargetWindow().y)
 	{
-    	tiltAxisCorrection = 2;
+    	tiltAxisCorrection = -1;
 	}
-    else
-    {
-    	tiltAxisCorrection = 0;
-    }
+
 
     // Check movement range of pan axis
     panAxisCorrection = panServo.getAngle() + panAxisCorrection;

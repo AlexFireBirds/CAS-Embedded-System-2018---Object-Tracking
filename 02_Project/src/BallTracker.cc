@@ -14,6 +14,9 @@ BallTracker::BallTracker(cv::Mat image)
 {
 	imageHeight = image.size().height;
 	imageWidth = image.size().width;
+
+	centerOfImage.x = imageWidth/2;
+	centerOfImage.y = imageHeight/2;
 }
 
 BallTracker::~BallTracker(){
@@ -21,23 +24,11 @@ BallTracker::~BallTracker(){
 
 void BallTracker::DrawTargetWindow(cv::Mat image)
 {
-	centerOfImage.x = imageWidth/2;
-	centerOfImage.y = imageHeight/2;
-
 	// Draw target window
-	cv::Point upperLeftCornerOfTargetWindow;
-	cv::Point lowerRightCornerOfTargetWindow;
-
-	upperLeftCornerOfTargetWindow.x = centerOfImage.x - targetWindowWidth / 2;
-	upperLeftCornerOfTargetWindow.y = centerOfImage.y - targetWindowHeight / 2;
-
-	lowerRightCornerOfTargetWindow.x = centerOfImage.x + targetWindowWidth / 2;
-	lowerRightCornerOfTargetWindow.y = centerOfImage.y + targetWindowHeight / 2;
-
 	cv::rectangle(image, upperLeftCornerOfTargetWindow, lowerRightCornerOfTargetWindow, cv::Scalar(0, 140, 255),4, -1, 0);
 }
 
-void BallTracker::SetTargetWindowSIze(unsigned int width, unsigned height)
+void BallTracker::SetTargetWindowSize(unsigned int width, unsigned height)
 {
 	targetWindowHeight = height;
 	targetWindowWidth = width;
@@ -50,7 +41,7 @@ void BallTracker::SetTargetWindowSIze(unsigned int width, unsigned height)
 	lowerRightCornerOfTargetWindow.y = centerOfImage.y + targetWindowHeight / 2;
 }
 
-cv::Point BallTracker::GetupperLeftCornerOfTargetWindow(void)
+cv::Point BallTracker::GetUpperLeftCornerOfTargetWindow(void)
 {
 	return upperLeftCornerOfTargetWindow;
 }
