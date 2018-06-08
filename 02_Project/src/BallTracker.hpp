@@ -33,6 +33,7 @@ public:
     void SetTargetWindowSize(unsigned int width, unsigned height);
     cv::Point GetUpperLeftCornerOfTargetWindow(void);
     cv::Point GetLowerRightCornerOfTargetWindow(void);
+    Coordinate GetCenterOfImage(void);
 
 
 private:
@@ -43,7 +44,6 @@ private:
     unsigned int targetWindowHeight;
     cv::Point upperLeftCornerOfTargetWindow;
     cv::Point lowerRightCornerOfTargetWindow;
-
     Coordinate centerOfImage;
 };
 

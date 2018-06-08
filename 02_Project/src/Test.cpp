@@ -24,6 +24,7 @@ int main( int argc, char** argv )
 	BallDetection ballDetector;
 	double panAxisCorrection;
 	double tiltAxisCorrection;
+	int distanceBetweenCenterAndBall = 0;
 	cv::Mat originalImage;
 
 	Servo panServo(Servo::PAN);
@@ -56,8 +57,8 @@ int main( int argc, char** argv )
 
 	// Init servos
 	panServo.setAngle(0);
-	tiltServo.setAngle(-20);
-
+	tiltServo.setAngle(-8);
+	usleep(3000000);
 
 
   while(1)
@@ -67,64 +68,76 @@ int main( int argc, char** argv )
 
 	ballDetector.ExecuteDetecionCycle(originalImage);
 
-	balltracking.DrawTargetWindow(originalImage);
-
-    circle( originalImage, Point(ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y), 15, Scalar(0,0,255), 3, LINE_AA);
-    circle( originalImage, Point(ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y), 2, Scalar(0,255,0), 3, LINE_AA);
-
-    imshow("Processd image", originalImage);
-
-
-    // Do a process cycle and get coordinates of the ball in this frame
-    // Evaluate pan correction
-    panAxisCorrection = 0;
-    if (ballDetector.GetCoordinatesOfBall().x < balltracking.GetUpperLeftCornerOfTargetWindow().x)
-    {
-    	panAxisCorrection = 1;
-    }
-    if (ballDetector.GetCoordinatesOfBall().x > balltracking.GetLowerRightCornerOfTargetWindow().x)
+	if(ballDetector.NumberOfDetectedBalls() >= 1)
 	{
-    	panAxisCorrection = -1;
+		balltracking.DrawTargetWindow(originalImage);
+
+		circle( originalImage, Point(ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y), 15, Scalar(0,0,255), 3, LINE_AA);
+		circle( originalImage, Point(ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y), 2, Scalar(0,255,0), 3, LINE_AA);
+
+		imshow("Processd image", originalImage);
+
+
+		// Do a process cycle and get coordinates of the ball in this frame
+		// Evaluate pan correction
+		panAxisCorrection = 0;
+		if (ballDetector.GetCoordinatesOfBall().x < balltracking.GetUpperLeftCornerOfTargetWindow().x)
+		{
+			distanceBetweenCenterAndBall =   abs(balltracking.GetCenterOfImage().x - ballDetector.GetCoordinatesOfBall().x);
+			panAxisCorrection = 0.4124*exp(0.0102 * distanceBetweenCenterAndBall);
+		}
+		if (ballDetector.GetCoordinatesOfBall().x > balltracking.GetLowerRightCornerOfTargetWindow().x)
+		{
+			distanceBetweenCenterAndBall =   abs(balltracking.GetCenterOfImage().x - ballDetector.GetCoordinatesOfBall().x);
+			panAxisCorrection = -(0.4124*exp(0.0102 * distanceBetweenCenterAndBall));
+		}
+
+
+		// Evaluate tilt correction
+		tiltAxisCorrection = 0;
+		if (ballDetector.GetCoordinatesOfBall().y > balltracking.GetLowerRightCornerOfTargetWindow().y)
+		{
+			distanceBetweenCenterAndBall =   abs(balltracking.GetCenterOfImage().y - ballDetector.GetCoordinatesOfBall().y);
+			tiltAxisCorrection = 0.4097*exp(0.0084 * distanceBetweenCenterAndBall);
+		}
+		if (ballDetector.GetCoordinatesOfBall().y < balltracking.GetUpperLeftCornerOfTargetWindow().y)
+		{
+			distanceBetweenCenterAndBall =   abs(balltracking.GetCenterOfImage().y - ballDetector.GetCoordinatesOfBall().y);
+			tiltAxisCorrection = -(0.4097*exp(0.0084 * distanceBetweenCenterAndBall));
+		}
+
+
+		// Check movement range of pan axis
+		panAxisCorrection = panServo.getAngle() + panAxisCorrection;
+		if(panAxisCorrection > 90)
+		{
+			panAxisCorrection = 90;
+		}
+		if(panAxisCorrection < -90)
+		{
+			panAxisCorrection = -90;
+		}
+
+		// Check movement range of tilt axis
+		tiltAxisCorrection = tiltServo.getAngle() + tiltAxisCorrection;
+		if(tiltAxisCorrection > 40)
+		{
+			tiltAxisCorrection = 40;
+		}
+		if(tiltAxisCorrection < -90)
+		{
+			tiltAxisCorrection = -90;
+		}
+
+		// Execute correction
+		panServo.setAngle(panAxisCorrection);
+		tiltServo.setAngle(tiltAxisCorrection);
 	}
-
-
-    // Evaluate tilt correction
-    tiltAxisCorrection = 0;
-    if (ballDetector.GetCoordinatesOfBall().y > balltracking.GetLowerRightCornerOfTargetWindow().y)
-    {
-    	tiltAxisCorrection = 1;
-    }
-    if (ballDetector.GetCoordinatesOfBall().y < balltracking.GetUpperLeftCornerOfTargetWindow().y)
+	else
 	{
-    	tiltAxisCorrection = -1;
+		imshow("Processd image", originalImage);
+		balltracking.DrawTargetWindow(originalImage);
 	}
-
-
-    // Check movement range of pan axis
-    panAxisCorrection = panServo.getAngle() + panAxisCorrection;
-    if(panAxisCorrection > 90)
-    {
-    	panAxisCorrection = 90;
-    }
-    if(panAxisCorrection < -90)
-    {
-    	panAxisCorrection = -90;
-    }
-
-    // Check movement range of tilt axis
-    tiltAxisCorrection = tiltServo.getAngle() + tiltAxisCorrection;
-    if(tiltAxisCorrection > 40)
-    {
-    	tiltAxisCorrection = 40;
-    }
-    if(tiltAxisCorrection < -90)
-    {
-    	tiltAxisCorrection = -90;
-    }
-
-    // Execute correction
-    panServo.setAngle(panAxisCorrection);
-    tiltServo.setAngle(tiltAxisCorrection);
 
 	// Check exit condition for endless loop
 	if (cv::waitKey(5)>=0)

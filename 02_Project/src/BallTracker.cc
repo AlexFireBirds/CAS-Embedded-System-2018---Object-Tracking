@@ -50,3 +50,8 @@ cv::Point BallTracker::GetLowerRightCornerOfTargetWindow(void)
 {
 	return lowerRightCornerOfTargetWindow;
 }
+
+Coordinate BallTracker::GetCenterOfImage(void)
+{
+	return centerOfImage;
+}
