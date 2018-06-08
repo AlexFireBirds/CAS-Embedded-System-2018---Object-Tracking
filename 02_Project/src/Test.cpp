@@ -43,7 +43,7 @@ int main( int argc, char** argv )
 
 	// Business logic test
 	BallTracker balltracking(originalImage);
-	balltracking.SetTargetWindowSize(200, 135);
+	balltracking.SetTargetWindowSize(100, 70);
 
 	ballDetector.SetLow_H(0);
 	ballDetector.SetLow_S(0);
@@ -80,11 +80,11 @@ int main( int argc, char** argv )
     panAxisCorrection = 0;
     if (ballDetector.GetCoordinatesOfBall().x < balltracking.GetUpperLeftCornerOfTargetWindow().x)
     {
-    	panAxisCorrection = 2;
+    	panAxisCorrection = 1;
     }
     if (ballDetector.GetCoordinatesOfBall().x > balltracking.GetLowerRightCornerOfTargetWindow().x)
 	{
-    	panAxisCorrection = -2;
+    	panAxisCorrection = -1;
 	}
 
 
