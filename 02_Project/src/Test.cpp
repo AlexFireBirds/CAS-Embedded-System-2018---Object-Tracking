@@ -98,12 +98,12 @@ int main( int argc, char** argv )
 		if (ballDetector.GetCoordinatesOfBall().y > balltracking.GetLowerRightCornerOfTargetWindow().y)
 		{
 			distanceBetweenCenterAndBall =   abs(balltracking.GetCenterOfImage().y - ballDetector.GetCoordinatesOfBall().y);
-			tiltAxisCorrection = 0.4097*exp(0.0084 * distanceBetweenCenterAndBall);
+			tiltAxisCorrection = 0.2572*exp(0.0139 * distanceBetweenCenterAndBall);
 		}
 		if (ballDetector.GetCoordinatesOfBall().y < balltracking.GetUpperLeftCornerOfTargetWindow().y)
 		{
 			distanceBetweenCenterAndBall =   abs(balltracking.GetCenterOfImage().y - ballDetector.GetCoordinatesOfBall().y);
-			tiltAxisCorrection = -(0.4097*exp(0.0084 * distanceBetweenCenterAndBall));
+			tiltAxisCorrection = -(0.2572*exp(0.0139 * distanceBetweenCenterAndBall));
 		}
 
 
