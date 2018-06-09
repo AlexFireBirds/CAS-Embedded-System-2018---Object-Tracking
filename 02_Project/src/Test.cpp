@@ -10,28 +10,40 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/videoio.hpp>
 #include <opencv2/imgproc.hpp>
+#include <unistd.h>
+#include <iostream>
+#include <string>
+
 #include "ThresholdEvaluator.hpp"
 #include "BallDetection.hpp"
 #include "BallTracker.hpp"
 #include "Servo.hpp"
-#include <unistd.h>
-
+#include "GPIO.hpp"
 
 using namespace cv;
 
 int main( int argc, char** argv )
 {
+	// Setup of modules
 	BallDetection ballDetector;
 	double panAxisCorrection;
 	double tiltAxisCorrection;
 	int distanceBetweenCenterAndBall = 0;
+	bool isTargetLocked = false;
 	cv::Mat originalImage;
 
+	// Setup servos
 	Servo panServo(Servo::PAN);
 	panServo.enable();
 	Servo tiltServo(Servo::TILT);
 	tiltServo.enable();
 
+	// Setup GPIOs
+	GPIO GPIO23(23);
+	GPIO23.setup();
+	GPIO23.setPulseTime(100);
+
+	// Open camera
 	VideoCapture cap(0);
 	if (!cap.isOpened())
 	{
@@ -41,25 +53,23 @@ int main( int argc, char** argv )
 	// Get actual image (640 x 480)
 	cap >> originalImage;
 
-
-	// Business logic test
+	// Setup BallTracker
 	BallTracker balltracking(originalImage);
-	balltracking.SetTargetWindowSize(100, 70);
+	balltracking.SetTargetWindowSize(40, 40);
 
+	// Set thresholds of ball detector
 	ballDetector.SetLow_H(12);
 	ballDetector.SetLow_S(94);
 	ballDetector.SetLow_V(189);
 
 	ballDetector.SetHigh_H(41);
 	ballDetector.SetHigh_S(229);
-	ballDetector.SetHigh_V(255);
-
+	ballDetector.SetHigh_V(255 );
 
 	// Init servos
 	panServo.setAngle(0);
 	tiltServo.setAngle(-10);
 	usleep(5000000);
-
 
   while(1)
   {
@@ -92,20 +102,28 @@ int main( int argc, char** argv )
 			panAxisCorrection = -(0.4124*exp(0.0102 * distanceBetweenCenterAndBall));
 		}
 
-
 		// Evaluate tilt correction
 		tiltAxisCorrection = 0;
 		if (ballDetector.GetCoordinatesOfBall().y > balltracking.GetLowerRightCornerOfTargetWindow().y)
 		{
 			distanceBetweenCenterAndBall =   abs(balltracking.GetCenterOfImage().y - ballDetector.GetCoordinatesOfBall().y);
-			tiltAxisCorrection = 0.2572*exp(0.0139 * distanceBetweenCenterAndBall);
+			tiltAxisCorrection = 0.1049*exp(0.0172 * distanceBetweenCenterAndBall);
 		}
 		if (ballDetector.GetCoordinatesOfBall().y < balltracking.GetUpperLeftCornerOfTargetWindow().y)
 		{
 			distanceBetweenCenterAndBall =   abs(balltracking.GetCenterOfImage().y - ballDetector.GetCoordinatesOfBall().y);
-			tiltAxisCorrection = -(0.2572*exp(0.0139 * distanceBetweenCenterAndBall));
+			tiltAxisCorrection = -(0.1049*exp(0.0172 * distanceBetweenCenterAndBall));
 		}
 
+		// Is target locked?
+		if(panAxisCorrection == 0 && tiltAxisCorrection == 0)
+		{
+			isTargetLocked = true;
+		}
+		else
+		{
+			isTargetLocked = false;
+		}
 
 		// Check movement range of pan axis
 		panAxisCorrection = panServo.getAngle() + panAxisCorrection;
@@ -139,6 +157,39 @@ int main( int argc, char** argv )
 		balltracking.DrawTargetWindow(originalImage);
 	}
 
+//	// Is target locked?
+//	if(isTargetLocked)
+//	{
+////		cv::putText(originalImage,
+////		            "Target locked",
+////		            cv::Point(20,5), // Coordinates
+////		            cv::FONT_HERSHEY_COMPLEX_SMALL, // Font
+////		            1.0, // Scale. 2.0 = 2x bigger
+////		            cv::Scalar(255,255,255), // BGR Color
+////		            1, // Line Thickness
+////		            2); // Anti-alias
+//
+//		imshow("Processd image", originalImage);
+//
+//		if (cv::waitKey(5)>=0)
+//		{
+//			GPIO23.pulseOutput();
+//		}
+//	}
+//	else
+//	{
+////		cv::putText(originalImage,
+////		            "             ",
+////		            cv::Point(20,5), // Coordinates
+////		            cv::FONT_HERSHEY_COMPLEX_SMALL, // Font
+////		            1.0, // Scale. 2.0 = 2x bigger
+////		            cv::Scalar(255,255,255), // BGR Color
+////		            1, // Line Thickness
+////		            2); // Anti-alias
+//
+//		imshow("Processd image", originalImage);
+//	}
+
 	// Check exit condition for endless loop
 	if (cv::waitKey(5)>=0)
 	{
@@ -153,6 +204,8 @@ int main( int argc, char** argv )
   cap.release();
   destroyAllWindows();
 
+
+  GPIO23.~GPIO();
 
   waitKey(0);
   return 0;
