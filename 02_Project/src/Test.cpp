@@ -56,7 +56,7 @@ int main( int argc, char** argv )
 
 	// Setup BallTracker
 	BallTracker balltracking(originalImage);
-	balltracking.SetTargetWindowSize(40, 40);
+	balltracking.SetTargetWindowSize(27, 27);
 
 	// Set thresholds of ball detector
 	ballDetector.SetLow_H(5);
@@ -93,12 +93,12 @@ int main( int argc, char** argv )
 		if (ballDetector.GetCoordinatesOfBall().x < balltracking.GetUpperLeftCornerOfTargetWindow().x)
 		{
 			distanceBetweenCenterAndBall =   abs(balltracking.GetCenterOfImage().x - ballDetector.GetCoordinatesOfBall().x);
-			panAxisCorrection = 0.4124*exp(0.0102 * distanceBetweenCenterAndBall);
+			panAxisCorrection = 0.2752*exp(0.0121 * distanceBetweenCenterAndBall);
 		}
 		if (ballDetector.GetCoordinatesOfBall().x > balltracking.GetLowerRightCornerOfTargetWindow().x)
 		{
 			distanceBetweenCenterAndBall =   abs(balltracking.GetCenterOfImage().x - ballDetector.GetCoordinatesOfBall().x);
-			panAxisCorrection = -(0.4124*exp(0.0102 * distanceBetweenCenterAndBall));
+			panAxisCorrection = -(0.2752*exp(0.0121 * distanceBetweenCenterAndBall));
 		}
 
 		// Evaluate tilt correction
