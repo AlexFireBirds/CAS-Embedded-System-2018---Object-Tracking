@@ -11,12 +11,12 @@ using namespace cv;
 
 BallDetection::BallDetection()
 :numberOfDetectedBalls(0), isDetectionRunning(false),
- low_H(0),
- low_S(140),
- low_V(128),
- high_H(73),
- high_S(255),
- high_V(250)
+ low_H(12),
+ low_S(94),
+ low_V(189),
+ high_H(41),
+ high_S(229),
+ high_V(255)
 {
 
 }
@@ -38,10 +38,10 @@ void BallDetection::ExecuteDetecionCycle(cv::Mat image)
 	inRange(processdImage, Scalar(low_H, low_S, low_V), Scalar(high_H, high_S, high_V), processdImage);
 
 	// Smooth image
-	GaussianBlur(processdImage, processdImage, Size(9,9), 0, 0);
+	GaussianBlur(processdImage, processdImage, Size(5,5), 0, 0);
 
 	// Search for circles
-	HoughCircles(processdImage, circles, HOUGH_GRADIENT, 1, 50, 100, 30, 25, 100);
+	HoughCircles(processdImage, circles, HOUGH_GRADIENT, 2, image.rows / 4, 50, 25, 2, 100);
 
 	// Update coordinates of detected ball
 	numberOfDetectedBalls = circles.size();

@@ -46,19 +46,19 @@ int main( int argc, char** argv )
 	BallTracker balltracking(originalImage);
 	balltracking.SetTargetWindowSize(100, 70);
 
-	ballDetector.SetLow_H(0);
-	ballDetector.SetLow_S(0);
-	ballDetector.SetLow_V(175);
+	ballDetector.SetLow_H(12);
+	ballDetector.SetLow_S(94);
+	ballDetector.SetLow_V(189);
 
-	ballDetector.SetHigh_H(28);
-	ballDetector.SetHigh_S(186);
-	ballDetector.SetHigh_V(238);
+	ballDetector.SetHigh_H(41);
+	ballDetector.SetHigh_S(229);
+	ballDetector.SetHigh_V(255);
 
 
 	// Init servos
 	panServo.setAngle(0);
-	tiltServo.setAngle(-8);
-	usleep(3000000);
+	tiltServo.setAngle(-10);
+	usleep(5000000);
 
 
   while(1)
