@@ -155,10 +155,10 @@ int main( int argc, char** argv )
 	{
 		cv::putText(originalImage,
 		            "Target locked",
-		            cv::Point(5,10), 				// Coordinates
+		            cv::Point(5,15), 				// Coordinates
 		            cv::FONT_HERSHEY_COMPLEX_SMALL, // Font
 		            1.0, 							// Scale. 2.0 = 2x bigger
-		            cv::Scalar(51,51,255), 		// BGR colour
+		            cv::Scalar(0,0,255), 		// BGR colour
 		            1, 								// Line Thickness
 		            false);
 
