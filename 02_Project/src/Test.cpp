@@ -58,13 +58,13 @@ int main( int argc, char** argv )
 	balltracking.SetTargetWindowSize(40, 40);
 
 	// Set thresholds of ball detector
-	ballDetector.SetLow_H(12);
+	ballDetector.SetLow_H(5);
 	ballDetector.SetLow_S(94);
 	ballDetector.SetLow_V(189);
 
-	ballDetector.SetHigh_H(41);
+	ballDetector.SetHigh_H(21);
 	ballDetector.SetHigh_S(229);
-	ballDetector.SetHigh_V(255 );
+	ballDetector.SetHigh_V(255);
 
 	// Init servos
 	panServo.setAngle(0);
@@ -86,7 +86,6 @@ int main( int argc, char** argv )
 		circle( originalImage, Point(ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y), 2, Scalar(0,255,0), 3, LINE_AA);
 
 		imshow("Processd image", originalImage);
-
 
 		// Do a process cycle and get coordinates of the ball in this frame
 		// Evaluate pan correction
