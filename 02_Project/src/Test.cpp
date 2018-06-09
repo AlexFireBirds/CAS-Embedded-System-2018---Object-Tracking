@@ -158,11 +158,12 @@ int main( int argc, char** argv )
 		            cv::Point(5,10), 				// Coordinates
 		            cv::FONT_HERSHEY_COMPLEX_SMALL, // Font
 		            1.0, 							// Scale. 2.0 = 2x bigger
-		            cv::Scalar(255,255,255), 		// BGR colour
+		            cv::Scalar(51,51,255), 		// BGR colour
 		            1, 								// Line Thickness
 		            false);
 
-		if (cv::waitKey(5)>=0)
+		// Shoot if 's' is pressed
+		if ((cv::waitKey(1) & 0xEFFFFF) == 115)
 		{
 			GPIO23.pulseOutput();
 		}
@@ -171,8 +172,8 @@ int main( int argc, char** argv )
 	// Show image
 	imshow("Processd image", originalImage);
 
-	// Check exit condition for endless loop
-	if (cv::waitKey(5)>=0)
+	// Check for 'esc' condition for endless loop
+	if ((cv::waitKey(1) & 0xEFFFFF) == 27)
 	{
 	 break;
 	}
