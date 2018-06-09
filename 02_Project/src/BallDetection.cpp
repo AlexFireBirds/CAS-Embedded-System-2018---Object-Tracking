@@ -47,8 +47,11 @@ void BallDetection::ExecuteDetecionCycle(cv::Mat image)
 	numberOfDetectedBalls = circles.size();
 	if(numberOfDetectedBalls >= 1)
 	{
-		coordinatesOfBall.x = circles[0][0];
-		coordinatesOfBall.y = circles[0][1];
+		if(circles[0][0] >= 10)
+		{
+			coordinatesOfBall.x = circles[0][0];
+			coordinatesOfBall.y = circles[0][1];
+		}
 	}
 
 	isDetectionRunning = false;

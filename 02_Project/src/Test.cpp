@@ -114,7 +114,7 @@ int main( int argc, char** argv )
 			tiltAxisCorrection = -(0.1049*exp(0.0172 * distanceBetweenCenterAndBall));
 		}
 
-		// Is target locked?
+		// Is target locked and therfore are corrections required?
 		if(panAxisCorrection == 0 && tiltAxisCorrection == 0)
 		{
 			isTargetLocked = true;
@@ -122,38 +122,37 @@ int main( int argc, char** argv )
 		else
 		{
 			isTargetLocked = false;
-		}
 
-		// Check movement range of pan axis
-		panAxisCorrection = panServo.getAngle() + panAxisCorrection;
-		if(panAxisCorrection > 90)
-		{
-			panAxisCorrection = 90;
-		}
-		if(panAxisCorrection < -90)
-		{
-			panAxisCorrection = -90;
-		}
+			// Check movement range of pan axis
+			panAxisCorrection = panServo.getAngle() + panAxisCorrection;
+			if(panAxisCorrection > 90)
+			{
+				panAxisCorrection = 90;
+			}
+			if(panAxisCorrection < -90)
+			{
+				panAxisCorrection = -90;
+			}
 
-		// Check movement range of tilt axis
-		tiltAxisCorrection = tiltServo.getAngle() + tiltAxisCorrection;
-		if(tiltAxisCorrection > 40)
-		{
-			tiltAxisCorrection = 40;
-		}
-		if(tiltAxisCorrection < -90)
-		{
-			tiltAxisCorrection = -90;
-		}
+			// Check movement range of tilt axis
+			tiltAxisCorrection = tiltServo.getAngle() + tiltAxisCorrection;
+			if(tiltAxisCorrection > 40)
+			{
+				tiltAxisCorrection = 40;
+			}
+			if(tiltAxisCorrection < -90)
+			{
+				tiltAxisCorrection = -90;
+			}
 
-		// Execute correction
-		panServo.setAngle(panAxisCorrection);
-		tiltServo.setAngle(tiltAxisCorrection);
+			// Execute correction
+			panServo.setAngle(panAxisCorrection);
+			tiltServo.setAngle(tiltAxisCorrection);
+		}
 	}
 	else
 	{
 		imshow("Processd image", originalImage);
-		balltracking.DrawTargetWindow(originalImage);
 	}
 
 //	// Is target locked?
