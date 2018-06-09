@@ -150,41 +150,26 @@ int main( int argc, char** argv )
 		}
 	}
 
+	// Arm canon if target is locked
+	if(isTargetLocked)
+	{
+		cv::putText(originalImage,
+		            "Target locked",
+		            cv::Point(5,10), 				// Coordinates
+		            cv::FONT_HERSHEY_COMPLEX_SMALL, // Font
+		            1.0, 							// Scale. 2.0 = 2x bigger
+		            cv::Scalar(255,255,255), 		// BGR colour
+		            1, 								// Line Thickness
+		            false);
+
+		if (cv::waitKey(5)>=0)
+		{
+			GPIO23.pulseOutput();
+		}
+	}
+
+	// Show image
 	imshow("Processd image", originalImage);
-
-
-//	// Is target locked?
-//	if(isTargetLocked)
-//	{
-////		cv::putText(originalImage,
-////		            "Target locked",
-////		            cv::Point(20,5), // Coordinates
-////		            cv::FONT_HERSHEY_COMPLEX_SMALL, // Font
-////		            1.0, // Scale. 2.0 = 2x bigger
-////		            cv::Scalar(255,255,255), // BGR Color
-////		            1, // Line Thickness
-////		            2); // Anti-alias
-//
-//		imshow("Processd image", originalImage);
-//
-//		if (cv::waitKey(5)>=0)
-//		{
-//			GPIO23.pulseOutput();
-//		}
-//	}
-//	else
-//	{
-////		cv::putText(originalImage,
-////		            "             ",
-////		            cv::Point(20,5), // Coordinates
-////		            cv::FONT_HERSHEY_COMPLEX_SMALL, // Font
-////		            1.0, // Scale. 2.0 = 2x bigger
-////		            cv::Scalar(255,255,255), // BGR Color
-////		            1, // Line Thickness
-////		            2); // Anti-alias
-//
-//		imshow("Processd image", originalImage);
-//	}
 
 	// Check exit condition for endless loop
 	if (cv::waitKey(5)>=0)
