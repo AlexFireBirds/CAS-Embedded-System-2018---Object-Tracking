@@ -30,6 +30,7 @@ int main( int argc, char** argv )
 	double tiltAxisCorrection;
 	int distanceBetweenCenterAndBall = 0;
 	bool isTargetLocked = false;
+	unsigned int readKey = 0;
 	cv::Mat originalImage;
 
 	// Setup servos
@@ -158,7 +159,7 @@ int main( int argc, char** argv )
 		            cv::Point(5,15), 				// Coordinates
 		            cv::FONT_HERSHEY_COMPLEX_SMALL, // Font
 		            1.0, 							// Scale. 2.0 = 2x bigger
-		            cv::Scalar(0,0,255), 		// BGR colour
+		            cv::Scalar(0,0,255), 			// BGR colour
 		            1, 								// Line Thickness
 		            false);
 
@@ -172,12 +173,19 @@ int main( int argc, char** argv )
 	// Show image
 	imshow("Processd image", originalImage);
 
-	// Check for 'esc' condition for endless loop
-	if ((cv::waitKey(1) & 0xEFFFFF) == 27)
+	// read key
+	readKey = (cv::waitKey(1) & 0xEFFFFF);
+	// 'esc' to quit enless loop
+	if (readKey == 27)
 	{
 	 break;
 	}
-
+	// 'r' to move servos to init position
+	else if(readKey == 114)
+	{
+		panServo.setAngle(0);
+		tiltServo.setAngle(-10);
+	}
   }
 
   // Shutdown
