@@ -24,7 +24,7 @@ using namespace cv;
 
 int main( int argc, char** argv )
 {
-	// Setup of modules
+	// Setup modules
 	BallDetection ballDetector;
 	double panAxisCorrection;
 	double tiltAxisCorrection;
@@ -80,12 +80,11 @@ int main( int argc, char** argv )
 
 	if(ballDetector.NumberOfDetectedBalls() >= 1)
 	{
+		// Target window is only drawed when ball is detected
 		balltracking.DrawTargetWindow(originalImage);
 
 		circle( originalImage, Point(ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y), 15, Scalar(0,0,255), 3, LINE_AA);
 		circle( originalImage, Point(ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y), 2, Scalar(0,255,0), 3, LINE_AA);
-
-		imshow("Processd image", originalImage);
 
 		// Do a process cycle and get coordinates of the ball in this frame
 		// Evaluate pan correction
@@ -114,7 +113,7 @@ int main( int argc, char** argv )
 			tiltAxisCorrection = -(0.1049*exp(0.0172 * distanceBetweenCenterAndBall));
 		}
 
-		// Is target locked and therfore are corrections required?
+		// Is target locked and therefore corrections required?
 		if(panAxisCorrection == 0 && tiltAxisCorrection == 0)
 		{
 			isTargetLocked = true;
@@ -150,10 +149,9 @@ int main( int argc, char** argv )
 			tiltServo.setAngle(tiltAxisCorrection);
 		}
 	}
-	else
-	{
-		imshow("Processd image", originalImage);
-	}
+
+	imshow("Processd image", originalImage);
+
 
 //	// Is target locked?
 //	if(isTargetLocked)
@@ -196,16 +194,12 @@ int main( int argc, char** argv )
 
   }
 
-
-
+  // Shutdown
   printf("Closing the camera\n\r");
   cap.release();
+  GPIO23.~GPIO();
   destroyAllWindows();
 
-
-  GPIO23.~GPIO();
-
-  waitKey(0);
   return 0;
 }
 
