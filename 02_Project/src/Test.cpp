@@ -31,6 +31,7 @@ int main( int argc, char** argv )
 	int distanceBetweenCenterAndBall = 0;
 	bool isTargetLocked = false;
 	unsigned int readKey = 0;
+	unsigned int counterOfTargetLocks = 0;
 	cv::Mat originalImage;
 
 	// Setup servos
@@ -72,7 +73,6 @@ int main( int argc, char** argv )
 	tiltServo.setAngle(-10);
 	usleep(5000000);
 
-
   while(1)
   {
 	// Get actual image
@@ -106,12 +106,12 @@ int main( int argc, char** argv )
 		if (ballDetector.GetCoordinatesOfBall().y > balltracking.GetLowerRightCornerOfTargetWindow().y)
 		{
 			distanceBetweenCenterAndBall =   abs(balltracking.GetCenterOfImage().y - ballDetector.GetCoordinatesOfBall().y);
-			tiltAxisCorrection = 0.1049*exp(0.0172 * distanceBetweenCenterAndBall);
+			tiltAxisCorrection = 0.2752*exp(0.0121 * distanceBetweenCenterAndBall);
 		}
 		if (ballDetector.GetCoordinatesOfBall().y < balltracking.GetUpperLeftCornerOfTargetWindow().y)
 		{
 			distanceBetweenCenterAndBall =   abs(balltracking.GetCenterOfImage().y - ballDetector.GetCoordinatesOfBall().y);
-			tiltAxisCorrection = -(0.1049*exp(0.0172 * distanceBetweenCenterAndBall));
+			tiltAxisCorrection = -(0.2752*exp(0.0121 * distanceBetweenCenterAndBall));
 		}
 
 		// Is target locked and therefore corrections required?
@@ -163,11 +163,36 @@ int main( int argc, char** argv )
 		            1, 								// Line Thickness
 		            false);
 
+		counterOfTargetLocks++;
+
 		// Shoot if 's' is pressed
-		if ((cv::waitKey(1) & 0xEFFFFF) == 115)
+		//if ((cv::waitKey(1) & 0xEFFFFF) == 115)
+		if(counterOfTargetLocks == 10)
 		{
 			GPIO23.pulseOutput();
+
+			cv::putText(originalImage,
+			            "Shot! Press any key to reset",
+			            cv::Point(5,40), 				// Coordinates
+			            cv::FONT_HERSHEY_COMPLEX_SMALL, // Font
+			            1.0, 							// Scale. 2.0 = 2x bigger
+			            cv::Scalar(0,255,0), 			// BGR colour
+			            1, 								// Line Thickness
+			            false);
+			imshow("Processd image", originalImage);
+			isTargetLocked = false;
+			counterOfTargetLocks = 0;
+
+			// read key
+			readKey = (cv::waitKey() & 0xEFFFFF);
+
+			panServo.setAngle(0);
+			tiltServo.setAngle(-10);
 		}
+	}
+	else
+	{
+		counterOfTargetLocks = 0;
 	}
 
 	// Show image
