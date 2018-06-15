@@ -31,6 +31,7 @@ int main( int argc, char** argv )
 	int distanceBetweenCenterAndBall = 0;
 	bool isTargetLocked = false;
 	unsigned int readKey = 0;
+	unsigned int numberOfExecutions = 0;
 	cv::Mat originalImage;
 
 	// Setup servos
@@ -48,7 +49,7 @@ int main( int argc, char** argv )
 	VideoCapture cap(0);
 	if (!cap.isOpened())
 	{
-		printf("ERROR: Unable to open the camera\n\r");
+		std::cout<<"ERROR: Unable to open the camera\n\r";
 	}
 
 	// Get actual image (640 x 480)
@@ -72,6 +73,7 @@ int main( int argc, char** argv )
 	tiltServo.setAngle(-10);
 	usleep(5000000);
 
+
   while(1)
   {
 	// Get actual image
@@ -84,7 +86,6 @@ int main( int argc, char** argv )
 		// Target window is only drawed when ball is detected
 		balltracking.DrawTargetWindow(originalImage);
 
-		circle( originalImage, Point(ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y), 15, Scalar(0,0,255), 3, LINE_AA);
 		circle( originalImage, Point(ballDetector.GetCoordinatesOfBall().x, ballDetector.GetCoordinatesOfBall().y), 2, Scalar(0,255,0), 3, LINE_AA);
 
 		// Do a process cycle and get coordinates of the ball in this frame
@@ -170,26 +171,37 @@ int main( int argc, char** argv )
 		}
 	}
 
-	// Show image
-	imshow("Processd image", originalImage);
+	// Show picture every fifth cycle
+	if(numberOfExecutions % 5 == 0)
+	{
+		// Show image
+		imshow("Processd image", originalImage);
+	}
 
-	// read key
-	readKey = (cv::waitKey(1) & 0xEFFFFF);
-	// 'esc' to quit endless loop
-	if (readKey == 27)
+	// Read key every tenth cycle
+	if(numberOfExecutions % 10 == 0)
 	{
-	 break;
+		// read key
+		readKey = (cv::waitKey(1) & 0xEFFFFF);
+		// 'esc' to quit endless loop
+		if (readKey == 27)
+		{
+		 break;
+		}
+		// 'r' to move servos to init position
+		else if(readKey == 114)
+		{
+			panServo.setAngle(0);
+			tiltServo.setAngle(-10);
+		}
+		numberOfExecutions=0;
 	}
-	// 'r' to move servos to init position
-	else if(readKey == 114)
-	{
-		panServo.setAngle(0);
-		tiltServo.setAngle(-10);
-	}
+
+	numberOfExecutions++;
   }
 
   // Shutdown
-  printf("Closing the camera\n\r");
+  std::cout<<"Closing the camera\n\r";
   cap.release();
   GPIO23.~GPIO();
   destroyAllWindows();
