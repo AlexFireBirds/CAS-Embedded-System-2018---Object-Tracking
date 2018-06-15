@@ -31,7 +31,6 @@ int main( int argc, char** argv )
 	int distanceBetweenCenterAndBall = 0;
 	bool isTargetLocked = false;
 	unsigned int readKey = 0;
-	unsigned int numberOfExecutions = 0;
 	cv::Mat originalImage;
 
 	// Setup servos
@@ -171,33 +170,22 @@ int main( int argc, char** argv )
 		}
 	}
 
-	// Show picture every fifth cycle
-	if(numberOfExecutions % 5 == 0)
-	{
-		// Show image
-		imshow("Processd image", originalImage);
-	}
+	// Show image
+	imshow("Processd image", originalImage);
 
-	// Read key every tenth cycle
-	if(numberOfExecutions % 10 == 0)
+	// read key
+	readKey = (cv::waitKey(1) & 0xEFFFFF);
+	// 'esc' to quit endless loop
+	if (readKey == 27)
 	{
-		// read key
-		readKey = (cv::waitKey(1) & 0xEFFFFF);
-		// 'esc' to quit endless loop
-		if (readKey == 27)
-		{
-		 break;
-		}
-		// 'r' to move servos to init position
-		else if(readKey == 114)
-		{
-			panServo.setAngle(0);
-			tiltServo.setAngle(-10);
-		}
-		numberOfExecutions=0;
+	 break;
 	}
-
-	numberOfExecutions++;
+	// 'r' to move servos to init position
+	else if(readKey == 114)
+	{
+		panServo.setAngle(0);
+		tiltServo.setAngle(-10);
+	}
   }
 
   // Shutdown
