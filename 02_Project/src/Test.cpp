@@ -175,7 +175,7 @@ int main( int argc, char** argv )
 
 	// read key
 	readKey = (cv::waitKey(1) & 0xEFFFFF);
-	// 'esc' to quit enless loop
+	// 'esc' to quit endless loop
 	if (readKey == 27)
 	{
 	 break;
