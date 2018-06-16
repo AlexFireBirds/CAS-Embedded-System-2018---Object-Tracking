@@ -167,7 +167,7 @@ int main( int argc, char** argv )
 
 		// Shoot if 's' is pressed
 		//if ((cv::waitKey(1) & 0xEFFFFF) == 115)
-		if(counterOfTargetLocks == 10)
+		if(counterOfTargetLocks == 20)
 		{
 			GPIO23.pulseOutput();
 
