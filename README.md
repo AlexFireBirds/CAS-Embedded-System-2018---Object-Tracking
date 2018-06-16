@@ -57,7 +57,7 @@ SUBSYSTEM=="pwm*", PROGRAM="/bin/sh -c '\
         chown -R root:gpio /sys/devices/platform/soc/*.pwm/pwm/pwmchip* && chmod -R 770 /sys/devices/platform/soc/*.pwm/pwm/pwmchip*\
 '"
 ``` 
-Danach in Eclipse unter ***Properties->C/C++ Build->Settings->Build Steps->Post-build steps* die folgende Zeile einfügen:
+Danach in Eclipse unter **Properties->C/C++ Build->Settings->Build Steps->Post-build steps** die folgende Zeile einfügen:
 ```console
 sudo chown root <Projektname>; sudo chmod +s <Projektname>;
 ```
