@@ -22,7 +22,8 @@
 
 using namespace cv;
 
-int main( int argc, char** argv )
+// main ist jetzt in Main.cpp
+int old_main( int argc, char** argv )
 {
 	// Setup modules
 	BallDetection ballDetector;
