@@ -51,6 +51,7 @@ void BallDetection::ExecuteDetecionCycle(cv::Mat image)
 		{
 			coordinatesOfBall.x = circles[0][0];
 			coordinatesOfBall.y = circles[0][1];
+			coordinatesOfBall.r = circles[0][2];
 		}
 	}
 
